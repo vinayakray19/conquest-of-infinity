@@ -11,7 +11,7 @@ from backend.config import (
     ENVIRONMENT
 )
 from backend.api.database import init_db
-from backend.api.routes import memos, stats
+from backend.api.routes import memos, stats, auth
 
 # Create FastAPI app
 app = FastAPI(
@@ -30,6 +30,7 @@ app.add_middleware(
 )
 
 # Include routers
+app.include_router(auth.router)
 app.include_router(memos.router)
 app.include_router(stats.router)
 

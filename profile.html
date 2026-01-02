@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Digital Diary</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .horizontal-menu {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 0;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+        .horizontal-menu-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+        .horizontal-menu-nav li {
+            margin: 0;
+            flex: 1;
+            border-right: 1px solid #eee;
+        }
+        .horizontal-menu-nav li:last-child {
+            border-right: none;
+        }
+        .horizontal-menu-nav a {
+            display: block;
+            padding: 1.25rem 2rem;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-weight: 500;
+            font-size: 1rem;
+            text-align: center;
+            border-bottom: 4px solid transparent;
+        }
+        .horizontal-menu-nav a:hover {
+            background: #f8f9fa;
+            color: #4a9eff;
+        }
+        .horizontal-menu-nav a.active {
+            background: #e8f4ff;
+            color: #4a9eff;
+            border-bottom-color: #4a9eff;
+            font-weight: 600;
+        }
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #eee;
+        }
+        .profile-header h1 {
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+        }
+        .btn-logout {
+            padding: 0.5rem 1rem;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        .btn-logout:hover {
+            background: #c0392b;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .add-post-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        .add-post-section h2 {
+            margin-top: 0;
+            font-family: 'Playfair Display', serif;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-family: 'Inter', sans-serif;
+        }
+        .form-group textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4a9eff;
+            box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.1);
+        }
+        .btn-primary {
+            padding: 0.75rem 2rem;
+            background: #4a9eff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn-primary:hover {
+            background: #3a8eef;
+        }
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .success-message,
+        .error-message {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1rem;
+        }
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .memo-preview {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            border-left: 4px solid #4a9eff;
+        }
+        .memo-preview h3 {
+            margin-top: 0;
+        }
+        .posts-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .posts-section h2 {
+            margin-top: 0;
+            font-family: 'Playfair Display', serif;
+        }
+        .posts-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .post-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border-left: 4px solid #4a9eff;
+        }
+        .post-item:hover {
+            background: #e9ecef;
+        }
+        .post-info {
+            flex: 1;
+        }
+        .post-info h3 {
+            margin: 0 0 0.25rem 0;
+            font-size: 1.1rem;
+        }
+        .post-info .post-date {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .post-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .btn-secondary {
+            padding: 0.5rem 1rem;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+        .btn-danger {
+            padding: 0.5rem 1rem;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        .btn-danger:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+        }
+        @media (max-width: 768px) {
+            .horizontal-menu-nav a {
+                padding: 1rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+</head>
+<body>
+    <div class="spring-background">
+        <div class="spring-trees"></div>
+        <div class="spring-leaves"></div>
+    </div>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="diary.html" class="nav-link">Diary</a>
+            <a href="profile.html" class="nav-link active">Profile</a>
+        </div>
+    </nav>
+
+    <main class="container">
+        <div class="content">
+            <div class="profile-header">
+                <h1>Profile</h1>
+                <button class="btn-logout" id="logoutBtn">Logout</button>
+            </div>
+
+            <div class="horizontal-menu">
+                <ul class="horizontal-menu-nav">
+                    <li><a href="#" class="nav-link-sidebar active" data-section="personal-info">Info</a></li>
+                    <li><a href="#" class="nav-link-sidebar" data-section="post-management">Memo</a></li>
+                </ul>
+            </div>
+
+            <div>
+                    <!-- Personal Info Section -->
+                    <div id="personal-info" class="content-section active">
+                        <div class="add-post-section">
+                            <h2>Info</h2>
+                            
+                            <div class="form-group">
+                                <label>Username</label>
+                                <input type="text" id="usernameDisplay" readonly style="background: #f5f5f5;">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Email (optional)</label>
+                                <input type="email" id="email" placeholder="your.email@example.com">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Bio (optional)</label>
+                                <textarea id="bio" rows="4" placeholder="Tell us about yourself..."></textarea>
+                            </div>
+                            
+                            <button class="btn-primary" id="savePersonalInfo">Save Changes</button>
+                            
+                            <div id="personalInfoMessage" style="margin-top: 1rem;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Post Management Section -->
+                    <div id="post-management" class="content-section">
+                        <div class="add-post-section">
+                            <h2>Add New Memo</h2>
+                
+                <div id="messageContainer"></div>
+                
+                <form id="addPostForm">
+                    <div class="form-group">
+                        <label for="title">Title *</label>
+                        <input type="text" id="title" name="title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="date">Date *</label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="content">Content *</label>
+                        <textarea id="content" name="content" required placeholder="Write your memo content here..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary" id="submitBtn">Create Memo</button>
+                </form>
+            </div>
+
+            <div class="posts-section">
+                <h2>Existing Posts</h2>
+                <div id="postsLoading" style="text-align: center; padding: 2rem; color: #666;">
+                    Loading memos...
+                </div>
+                <ul id="postsList" class="posts-list" style="display: none;"></ul>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let currentUser = null;
+
+        // Check authentication on page load
+        document.addEventListener('DOMContentLoaded', async function() {
+            const authenticated = await Auth.requireAuth();
+            if (!authenticated) {
+                return; // Redirect to login
+            }
+
+            // Get current user info
+            currentUser = await Auth.checkAuth();
+            if (currentUser) {
+                console.log('Logged in as:', currentUser.username);
+            }
+
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').value = today;
+
+            // Set username in personal info
+            if (currentUser) {
+                document.getElementById('usernameDisplay').value = currentUser.username;
+            }
+
+            // Load saved personal info
+            loadPersonalInfo();
+
+            // Load existing memos (first page)
+            await loadPosts(1);
+
+            // Setup sidebar navigation
+            setupSidebarNavigation();
+        });
+
+        // Sidebar navigation
+        function setupSidebarNavigation() {
+            const navLinks = document.querySelectorAll('.nav-link-sidebar');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all links and sections
+                    document.querySelectorAll('.nav-link-sidebar').forEach(l => l.classList.remove('active'));
+                    document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+                    
+                    // Add active class to clicked link and corresponding section
+                    this.classList.add('active');
+                    const sectionId = this.dataset.section;
+                    document.getElementById(sectionId).classList.add('active');
+                });
+            });
+        }
+
+        // Save personal info (placeholder - can be extended)
+        document.getElementById('savePersonalInfo')?.addEventListener('click', function() {
+            const email = document.getElementById('email').value;
+            const bio = document.getElementById('bio').value;
+            const messageContainer = document.getElementById('personalInfoMessage');
+            
+            // For now, just save to localStorage (can be extended to API)
+            if (email) localStorage.setItem('user_email', email);
+            if (bio) localStorage.setItem('user_bio', bio);
+            
+            showMessageInContainer(messageContainer, 'Personal information saved successfully!', 'success');
+            
+            // Note: This is a placeholder. In a full implementation, you'd:
+            // 1. Create a user profile endpoint in the API
+            // 2. Store email/bio in the database
+            // 3. Update the user model to include these fields
+        });
+
+        // Load saved personal info from localStorage
+        function loadPersonalInfo() {
+            const email = localStorage.getItem('user_email');
+            const bio = localStorage.getItem('user_bio');
+            
+            if (email) document.getElementById('email').value = email;
+            if (bio) document.getElementById('bio').value = bio;
+        }
+
+        function showMessageInContainer(container, message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type === 'success' ? 'success-message' : 'error-message';
+            messageDiv.textContent = message;
+            container.innerHTML = '';
+            container.appendChild(messageDiv);
+            
+            if (type === 'success') {
+                setTimeout(() => {
+                    messageDiv.remove();
+                }, 3000);
+            }
+        }
+
+        // Handle logout
+        document.getElementById('logoutBtn').addEventListener('click', async function() {
+            if (confirm('Are you sure you want to logout?')) {
+                await Auth.logout();
+            }
+        });
+
+        // Handle form submission
+        document.getElementById('addPostForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('title').value.trim();
+            const dateInput = document.getElementById('date').value;
+            const content = document.getElementById('content').value.trim();
+            const messageContainer = document.getElementById('messageContainer');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // Clear previous messages
+            messageContainer.innerHTML = '';
+            
+            if (!title || !dateInput || !content) {
+                showMessage('Please fill in all required fields.', 'error');
+                return;
+            }
+            
+            // Convert date to proper format
+            const date = new Date(dateInput + 'T00:00:00');
+            const dateStr = date.toISOString().split('T')[0];
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Creating...';
+            
+            try {
+                // Get next memo number
+                const memos = await API.getMemos('desc', 1, 0);
+                const nextMemoNumber = memos.length > 0 ? memos[0].memo_number + 1 : 1;
+                
+                const memoData = {
+                    memo_number: nextMemoNumber,
+                    title: title,
+                    content: content,
+                    date: dateStr
+                };
+                
+                const createdMemo = await API.createMemo(memoData);
+                
+                showMessage(`Memo created successfully! Memo #${createdMemo.memo_number}: "${createdMemo.title}"`, 'success');
+                
+                // Reset form
+                document.getElementById('addPostForm').reset();
+                document.getElementById('date').value = new Date().toISOString().split('T')[0];
+                
+                // Show preview
+                showMemoPreview(createdMemo);
+                
+                // Reset total count and reload posts list (go to first page to show new memo)
+                totalMemosProfile = 0;
+                currentPageProfile = 1;
+                await loadPosts(1);
+                
+                // Scroll to the posts section
+                document.querySelector('.posts-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+            } catch (error) {
+                console.error('Error creating post:', error);
+                showMessage(`Failed to create memo: ${error.message}`, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Create Memo';
+            }
+        });
+
+        // Pagination variables for profile
+        let currentPageProfile = 1;
+        let totalMemosProfile = 0;
+        const MEMOS_PER_PAGE_PROFILE = 10;
+
+        // Define goToPageProfile function early so it's available for onclick handlers
+        window.goToPageProfile = async function(page) {
+            if (!page || page < 1) {
+                console.error('Invalid page number:', page);
+                return;
+            }
+            console.log(`[Pagination] Navigating to page ${page}`);
+            currentPageProfile = page;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            await loadPosts(page);
+        };
+
+        // Load and display existing posts
+        async function loadPosts(page = 1) {
+            const postsList = document.getElementById('postsList');
+            const postsLoading = document.getElementById('postsLoading');
+            
+            if (!postsList || !postsLoading) {
+                console.error('Posts list or loading element not found');
+                return;
+            }
+            
+            currentPageProfile = page;
+            postsLoading.style.display = 'block';
+            postsList.style.display = 'none';
+            postsList.innerHTML = '';
+            
+            try {
+                // Get total count first (only if not already set or if we're on page 1)
+                if (totalMemosProfile === 0 || page === 1) {
+                    const allMemos = await API.getMemos('desc', 1000, 0);
+                    totalMemosProfile = allMemos.length;
+                }
+                
+                const skip = (page - 1) * MEMOS_PER_PAGE_PROFILE;
+                const memos = await API.getMemos('desc', MEMOS_PER_PAGE_PROFILE, skip);
+                
+                postsLoading.style.display = 'none';
+                postsList.style.display = 'block';
+                postsList.innerHTML = '';
+                
+                if (memos.length === 0 && page === 1) {
+                    postsList.innerHTML = '<div class="empty-state">No memos yet. Create your first memo above!</div>';
+                    return;
+                }
+                
+                memos.forEach(memo => {
+                    const li = document.createElement('li');
+                    li.className = 'post-item';
+                    
+                    const date = new Date(memo.date);
+                    const formattedDate = date.toLocaleDateString('en-US', { 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    });
+                    
+                    li.innerHTML = `
+                        <div class="post-info">
+                            <h3>Memo #${memo.memo_number}: ${escapeHtml(memo.title)}</h3>
+                            <div class="post-date">${formattedDate}</div>
+                        </div>
+                        <div class="post-actions">
+                            <a href="memo.html?number=${memo.memo_number}" class="btn-secondary">View</a>
+                            <button class="btn-danger delete-btn" data-memo-number="${memo.memo_number}" data-title="${escapeHtml(memo.title)}">Delete</button>
+                        </div>
+                    `;
+                    
+                    postsList.appendChild(li);
+                });
+                
+                // Add delete event listeners
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', async function() {
+                        const memoNumber = parseInt(this.dataset.memoNumber);
+                        const title = this.dataset.title;
+                        await deletePost(memoNumber, title);
+                    });
+                });
+                
+                // Render pagination
+                renderPaginationProfile();
+                
+            } catch (error) {
+                console.error('Error loading memos:', error);
+                postsLoading.innerHTML = '<div class="error-message">Failed to load memos. Please refresh the page.</div>';
+            }
+        }
+
+        function renderPaginationProfile() {
+            const totalPages = Math.ceil(totalMemosProfile / MEMOS_PER_PAGE_PROFILE);
+            const postsSection = document.querySelector('.posts-section');
+            if (!postsSection) return;
+            
+            // Remove existing pagination
+            const existingPagination = document.getElementById('profilePagination');
+            if (existingPagination) {
+                existingPagination.remove();
+            }
+            
+            if (totalPages <= 1) {
+                return; // No pagination needed
+            }
+            
+            const paginationDiv = document.createElement('div');
+            paginationDiv.id = 'profilePagination';
+            paginationDiv.style.cssText = 'margin-top: 2rem; padding: 1.5rem; text-align: center; border-top: 1px solid #eee;';
+            
+            let paginationHTML = '<div style="display: flex; justify-content: center; align-items: center; gap: 0.5rem; flex-wrap: wrap;">';
+            
+            // Previous button
+            if (currentPageProfile > 1) {
+                paginationHTML += `<button onclick="window.goToPageProfile(${currentPageProfile - 1})" class="btn-secondary" style="min-width: 100px; cursor: pointer;">← Previous</button>`;
+            } else {
+                paginationHTML += `<button disabled class="btn-secondary" style="min-width: 100px; opacity: 0.5; cursor: not-allowed;">← Previous</button>`;
+            }
+            
+            // Page info
+            paginationHTML += `<span style="padding: 0 1rem; color: #666; font-weight: 500;">Page ${currentPageProfile} of ${totalPages}</span>`;
+            
+            // Next button
+            if (currentPageProfile < totalPages) {
+                paginationHTML += `<button onclick="window.goToPageProfile(${currentPageProfile + 1})" class="btn-secondary" style="min-width: 100px; cursor: pointer;">Next →</button>`;
+            } else {
+                paginationHTML += `<button disabled class="btn-secondary" style="min-width: 100px; opacity: 0.5; cursor: not-allowed;">Next →</button>`;
+            }
+            
+            paginationHTML += '</div>';
+            paginationHTML += `<div style="margin-top: 0.5rem; color: #999; font-size: 0.85rem;">Showing ${((currentPageProfile - 1) * MEMOS_PER_PAGE_PROFILE) + 1}-${Math.min(currentPageProfile * MEMOS_PER_PAGE_PROFILE, totalMemosProfile)} of ${totalMemosProfile} memos</div>`;
+            
+            paginationDiv.innerHTML = paginationHTML;
+            postsSection.appendChild(paginationDiv);
+        }
+
+
+        // Delete a post
+        async function deletePost(memoNumber, title) {
+            if (!confirm(`Are you sure you want to delete "Memo #${memoNumber}: ${title}"?\n\nThis action cannot be undone.`)) {
+                return;
+            }
+            
+            try {
+                await API.deleteMemo(memoNumber);
+                showMessage(`Memo "Memo #${memoNumber}: ${title}" deleted successfully.`, 'success');
+                
+                // Reset total count and reload - might need to go to previous page if current page is empty
+                totalMemosProfile = 0;
+                // Check if we need to go to previous page
+                const currentMemos = await API.getMemos('desc', MEMOS_PER_PAGE_PROFILE, (currentPageProfile - 1) * MEMOS_PER_PAGE_PROFILE);
+                if (currentMemos.length === 0 && currentPageProfile > 1) {
+                    await loadPosts(currentPageProfile - 1);
+                } else {
+                    await loadPosts(currentPageProfile);
+                }
+                
+            } catch (error) {
+                console.error('Error deleting memo:', error);
+                showMessage(`Failed to delete memo: ${error.message}`, 'error');
+            }
+        }
+
+        function showMessage(message, type) {
+            const messageContainer = document.getElementById('messageContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type === 'success' ? 'success-message' : 'error-message';
+            messageDiv.textContent = message;
+            messageContainer.innerHTML = '';
+            messageContainer.appendChild(messageDiv);
+            
+            // Auto-hide success messages after 5 seconds
+            if (type === 'success') {
+                setTimeout(() => {
+                    messageDiv.remove();
+                }, 5000);
+            }
+        }
+
+        function showMemoPreview(memo) {
+            const messageContainer = document.getElementById('messageContainer');
+            const previewDiv = document.createElement('div');
+            previewDiv.className = 'memo-preview';
+            previewDiv.innerHTML = `
+                <h3>Preview: Memo #${memo.memo_number}</h3>
+                <p><strong>Title:</strong> ${escapeHtml(memo.title)}</p>
+                <p><strong>Date:</strong> ${new Date(memo.date).toLocaleDateString()}</p>
+                <p><strong>Content:</strong> ${escapeHtml(memo.content).substring(0, 100)}${memo.content.length > 100 ? '...' : ''}</p>
+                <p><a href="memo.html?number=${memo.memo_number}">View full memo →</a></p>
+            `;
+            messageContainer.appendChild(previewDiv);
+        }
+    </script>
+</body>
+</html>
+

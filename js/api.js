@@ -40,19 +40,21 @@ const API = {
     },
     
     /**
-     * Create a new memo
+     * Create a new memo (requires authentication)
      */
     async createMemo(memoData) {
+        const headers = {
+            'Content-Type': 'application/json',
+            ...Auth.getAuthHeaders()
+        };
         const response = await fetch(`${this.baseUrl}/api/memos`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
+            headers: headers,
             body: JSON.stringify(memoData)
         });
         if (!response.ok) {
-            const error = await response.text();
-            throw new Error(`Failed to create memo: ${response.status} ${error}`);
+            const error = await response.json().catch(() => ({ detail: response.statusText }));
+            throw new Error(error.detail || `Failed to create memo: ${response.status}`);
         }
         return await response.json();
     },
@@ -75,14 +77,19 @@ const API = {
     },
     
     /**
-     * Delete a memo
+     * Delete a memo (requires authentication)
      */
     async deleteMemo(memoNumber) {
+        const headers = {
+            ...Auth.getAuthHeaders()
+        };
         const response = await fetch(`${this.baseUrl}/api/memos/${memoNumber}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: headers
         });
         if (!response.ok) {
-            throw new Error(`Failed to delete memo: ${response.status} ${response.statusText}`);
+            const error = await response.json().catch(() => ({ detail: response.statusText }));
+            throw new Error(error.detail || `Failed to delete memo: ${response.status}`);
         }
     },
     

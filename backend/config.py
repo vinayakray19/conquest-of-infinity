@@ -8,27 +8,35 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Database configuration
-# Render: For production, use Render's PostgreSQL or set DATABASE_URL
-# For SQLite, ensure directory exists and is writable
+# Render: Use PostgreSQL (free tier) for persistent data storage
+# For SQLite, ensure directory exists and is writable (local dev only)
 DATABASE_URL_ENV = os.getenv('DATABASE_URL', '')
 
 if DATABASE_URL_ENV:
     # Use provided DATABASE_URL (PostgreSQL on Render, or custom)
-    DATABASE_URL = DATABASE_URL_ENV
+    # Render provides postgres:// but SQLAlchemy needs postgresql://
+    if DATABASE_URL_ENV.startswith('postgres://'):
+        DATABASE_URL = DATABASE_URL_ENV.replace('postgres://', 'postgresql://', 1)
+    else:
+        DATABASE_URL = DATABASE_URL_ENV
 elif os.getenv('RENDER'):
-    # On Render without DATABASE_URL, use /tmp (ephemeral - not recommended)
-    # Note: Data will be lost on redeploy. Use PostgreSQL instead!
+    # On Render without DATABASE_URL - this should not happen!
+    # PostgreSQL database should be created and linked in Render Dashboard
     import warnings
-    warnings.warn("Using SQLite on Render - data will be lost on redeploy. Use PostgreSQL!")
+    import logging
+    logger = logging.getLogger(__name__)
+    logger.error("⚠️ DATABASE_URL not set on Render! Creating PostgreSQL database is required.")
+    warnings.warn("⚠️ CRITICAL: DATABASE_URL not set on Render. Data will be lost!")
+    warnings.warn("Create a PostgreSQL database in Render Dashboard and link it to your service.")
+    # Fallback to SQLite (will lose data - NOT RECOMMENDED)
     db_path = '/tmp/memos.db'
     try:
         os.makedirs(os.path.dirname(db_path), exist_ok=True)
     except (OSError, PermissionError):
-        # If /tmp doesn't work, try current directory
         db_path = str(BASE_DIR / 'memos.db')
     DATABASE_URL = f'sqlite:///{db_path}'
 else:
-    # Local development: use project directory
+    # Local development: use SQLite in project directory
     db_path = BASE_DIR / 'memos.db'
     DATABASE_URL = f'sqlite:///{db_path}'
 
@@ -47,4 +55,13 @@ ENVIRONMENT = os.getenv('ENVIRONMENT', 'development')
 
 # API version
 API_VERSION = "1.0.0"
+
+# Authentication configuration
+SECRET_KEY = os.getenv('SECRET_KEY', 'your-secret-key-change-in-production-min-32-chars')
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30 * 24 * 60  # 30 days
+
+# Default admin credentials (should be changed via environment variables)
+ADMIN_USERNAME = os.getenv('ADMIN_USERNAME', 'admin')
+ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD', 'admin')  # Change this in production!
 

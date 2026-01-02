@@ -10,12 +10,15 @@ const FrontendConfig = {
         }
         
         // If opened as file://, we need full URL
+        // Check both ports 8000 and 8001
         if (window.location.protocol === 'file:') {
             return 'http://localhost:8001';
         }
         
         // If on localhost, use localhost API
+        // Check both ports 8000 and 8001
         if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            // Default to 8001, but can be overridden
             return 'http://localhost:8001';
         }
         

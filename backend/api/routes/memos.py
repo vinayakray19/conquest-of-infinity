@@ -9,6 +9,7 @@ from typing import List
 
 from backend.api.models import Memo
 from backend.api.database import get_db
+from backend.api.auth import get_current_user
 
 router = APIRouter(prefix="/api/memos", tags=["memos"])
 
@@ -75,7 +76,8 @@ async def get_memo_navigation(memo_number: int, db: Session = Depends(get_db)):
 @router.post("", response_model=dict, status_code=status.HTTP_201_CREATED)
 async def create_memo(
     memo_data: dict,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: str = Depends(get_current_user)
 ):
     """Create a new memo."""
     # Validate required fields
@@ -133,7 +135,8 @@ async def create_memo(
 async def update_memo(
     memo_number: int,
     memo_data: dict,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: str = Depends(get_current_user)
 ):
     """Update an existing memo."""
     memo = db.query(Memo).filter(Memo.memo_number == memo_number).first()
@@ -171,7 +174,11 @@ async def update_memo(
     return memo.to_dict()
 
 @router.delete("/{memo_number}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_memo(memo_number: int, db: Session = Depends(get_db)):
+async def delete_memo(
+    memo_number: int, 
+    db: Session = Depends(get_db),
+    current_user: str = Depends(get_current_user)
+):
     """Delete a memo."""
     memo = db.query(Memo).filter(Memo.memo_number == memo_number).first()
     if not memo:

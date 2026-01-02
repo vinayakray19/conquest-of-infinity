@@ -53,33 +53,51 @@ This guide explains how to deploy the Digital Diary backend to Render.
 
 ## Database Setup
 
-### Using PostgreSQL (Recommended for Production)
+### Using PostgreSQL (REQUIRED for Production)
 
-Render provides PostgreSQL databases. The app will automatically use the DATABASE_URL.
+⚠️ **PostgreSQL is REQUIRED** - SQLite loses all data when Render service sleeps or redeploys!
 
-1. **Create Database on Render:**
-   - New → PostgreSQL
-   - Note the Internal Database URL
+**Your `render.yaml` already configures PostgreSQL.** Just follow these steps:
 
-2. **Set Environment Variable:**
-   - Add `DATABASE_URL` in your web service settings
-   - Use the Internal Database URL from Render
+1. **Create Database (via render.yaml):**
+   - When deploying via Blueprint, Render automatically creates the database
+   - Or manually: Render Dashboard → "New" → "PostgreSQL"
+   - Name: `digital-diary-db`
+   - Plan: **Free**
 
-3. **Run Migrations:**
-   After first deployment, you can run migrations:
+2. **Link Database to Service:**
+   - The `render.yaml` automatically links it via `fromDatabase`
+   - Or manually: Service → Environment → "Link Resource" → Select database
+
+3. **Verify DATABASE_URL:**
+   - Service → Environment variables
+   - `DATABASE_URL` should be automatically set
+   - Format: `postgres://user:pass@host:port/dbname`
+
+4. **Migrate Existing Data (if needed):**
    ```bash
-   # Via Render Shell or locally with DATABASE_URL set
-   python3 scripts/migrate_memos.py
+   # Get DATABASE_URL from Render Dashboard
+   export DATABASE_URL="postgres://user:pass@host:port/dbname"
+   
+   # Migrate from local SQLite
+   python3 scripts/migrate_to_postgresql.py
+   
+   # Or migrate from backup archive
+   python3 scripts/migrate_to_render.py
    ```
 
-### Using SQLite (Development Only)
+5. **Verify Data Persists:**
+   - Add a test memo via Profile page
+   - Let service sleep (wait or manually suspend)
+   - Wake service and check - data should still be there! ✅
 
-⚠️ **NOT RECOMMENDED FOR PRODUCTION** - SQLite files on Render are ephemeral and will be lost on redeploy.
+### ⚠️ SQLite on Render = DATA LOSS
 
-**Important:** The `render.yaml` is configured to use PostgreSQL. If you see database errors, ensure:
-1. The PostgreSQL database is created in Render
-2. The `DATABASE_URL` environment variable is set correctly
-3. The database connection string uses the **Internal Database URL** (not Public URL)
+**DO NOT USE SQLite on Render!** 
+- Data is lost when service sleeps (free tier)
+- Data is lost on redeploy
+- Data is lost on service restart
+- Use PostgreSQL instead!
 
 If you must use SQLite for testing (not recommended):
 - The app will try to use `/tmp/memos.db` automatically

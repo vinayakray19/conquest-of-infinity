@@ -7,9 +7,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from backend.config import DATABASE_URL, BASE_DIR
 
-# Prepare SQLite connection args and ensure directory exists
+# Prepare connection args based on database type
 connect_args = {}
 if 'sqlite' in DATABASE_URL:
+    # SQLite-specific configuration (local development only)
     connect_args["check_same_thread"] = False
     # Ensure SQLite database directory exists
     if DATABASE_URL.startswith('sqlite:///'):
@@ -27,19 +28,22 @@ if 'sqlite' in DATABASE_URL:
             try:
                 os.makedirs(db_dir, exist_ok=True)
             except (OSError, PermissionError) as e:
-                # If we can't create directory, try using /tmp as fallback
                 import logging
                 logger = logging.getLogger(__name__)
                 logger.warning(f"Could not create database directory {db_dir}: {e}")
-                # Use /tmp as fallback
-                db_path = '/tmp/memos.db'
-                DATABASE_URL = f'sqlite:///{db_path}'
+elif 'postgresql' in DATABASE_URL or 'postgres' in DATABASE_URL:
+    # PostgreSQL-specific configuration (Render production)
+    # SQLAlchemy handles PostgreSQL connection pooling automatically
+    # No special connect_args needed for PostgreSQL
+    pass
 
-# Create engine
+# Create engine with appropriate configuration
 engine = create_engine(
     DATABASE_URL,
     connect_args=connect_args,
-    pool_pre_ping=True  # Verify connections before using
+    pool_pre_ping=True,  # Verify connections before using (important for PostgreSQL)
+    pool_size=5,  # Connection pool size for PostgreSQL
+    max_overflow=10  # Max overflow connections
 )
 
 # Create session factory
