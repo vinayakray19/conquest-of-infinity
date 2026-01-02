@@ -59,10 +59,16 @@ if __name__ == "__main__":
     import uvicorn
     from backend.config import API_HOST, API_PORT, API_RELOAD
     
+    # For local development
     uvicorn.run(
         "backend.main:app",
         host=API_HOST,
         port=API_PORT,
         reload=API_RELOAD
     )
+
+# For Render deployment:
+# Render will automatically detect FastAPI and use gunicorn with uvicorn workers
+# The app object is directly importable as: backend.main:app
+# Render will bind to the PORT environment variable automatically
 
