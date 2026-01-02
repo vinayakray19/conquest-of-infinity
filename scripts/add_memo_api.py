@@ -20,6 +20,7 @@ from html import unescape
 import requests
 
 # API base URL - can be overridden via environment variable
+# Default to localhost, but can be set to Render: https://conquest-of-infinity.onrender.com
 API_BASE_URL = os.getenv('API_BASE_URL', 'http://localhost:8001')
 
 def fetch_content_from_url(url):
