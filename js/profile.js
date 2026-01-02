@@ -4,9 +4,6 @@
 
 // Profile state
 let currentUser = null;
-let currentPageProfile = 1;
-let totalMemosProfile = 0;
-const MEMOS_PER_PAGE_PROFILE = 10;
 
 // Initialize profile page
 document.addEventListener('DOMContentLoaded', async function() {
@@ -36,9 +33,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 
     // Load saved personal info
     loadPersonalInfo();
-
-    // Load existing memos (first page)
-    await loadPosts(1);
 
     // Setup sidebar navigation
     setupSidebarNavigation();
@@ -199,16 +193,7 @@ async function handleFormSubmission() {
         // Show preview
         showMemoPreview(createdMemo);
         
-        // Reset total count and reload posts list (go to first page to show new memo)
-        totalMemosProfile = 0;
-        currentPageProfile = 1;
-        await loadPosts(1);
-        
-        // Scroll to the posts section
-        const postsSection = document.querySelector('.posts-section');
-        if (postsSection) {
-            postsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
+        // Form submitted successfully - preview is shown above
         
     } catch (error) {
         console.error('Error creating post:', error);
@@ -217,131 +202,6 @@ async function handleFormSubmission() {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Create Memo';
     }
-}
-
-// Navigate to page (global function for onclick handlers)
-window.goToPageProfile = async function(page) {
-    if (!page || page < 1) {
-        console.error('Invalid page number:', page);
-        return;
-    }
-    console.log(`[Pagination] Navigating to page ${page}`);
-    currentPageProfile = page;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    await loadPosts(page);
-};
-
-// Load and display existing memos
-async function loadPosts(page = 1) {
-    const postsList = document.getElementById('postsList');
-    const postsLoading = document.getElementById('postsLoading');
-    
-    if (!postsList || !postsLoading) {
-        console.error('Posts list or loading element not found');
-        return;
-    }
-    
-    currentPageProfile = page;
-    postsLoading.style.display = 'block';
-    postsList.style.display = 'none';
-    postsList.innerHTML = '';
-    
-    try {
-        // Get total count first (only if not already set or if we're on page 1)
-        if (totalMemosProfile === 0 || page === 1) {
-            const allMemos = await API.getMemos('desc', 1000, 0);
-            totalMemosProfile = allMemos.length;
-        }
-        
-        const skip = (page - 1) * MEMOS_PER_PAGE_PROFILE;
-        const memos = await API.getMemos('desc', MEMOS_PER_PAGE_PROFILE, skip);
-        
-        postsLoading.style.display = 'none';
-        postsList.style.display = 'block';
-        postsList.innerHTML = '';
-        
-        if (memos.length === 0 && page === 1) {
-            postsList.innerHTML = '<div class="empty-state">No memos yet. Create your first memo above!</div>';
-            return;
-        }
-        
-        memos.forEach(memo => {
-            const li = document.createElement('li');
-            li.className = 'post-item';
-            
-            const date = new Date(memo.date);
-            const formattedDate = date.toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            });
-            
-            li.innerHTML = `
-                <div class="post-info">
-                    <h3>Memo #${memo.memo_number}: ${escapeHtml(memo.title)}</h3>
-                    <div class="post-date">${formattedDate}</div>
-                </div>
-                <div class="post-actions">
-                    <a href="memo.html?number=${memo.memo_number}" class="btn-secondary">View</a>
-                </div>
-            `;
-            
-            postsList.appendChild(li);
-        });
-        
-        // Render pagination
-        renderPaginationProfile();
-        
-    } catch (error) {
-        console.error('Error loading memos:', error);
-        postsLoading.innerHTML = '<div class="error-message">Failed to load memos. Please refresh the page.</div>';
-    }
-}
-
-// Render pagination controls
-function renderPaginationProfile() {
-    const totalPages = Math.ceil(totalMemosProfile / MEMOS_PER_PAGE_PROFILE);
-    const postsSection = document.querySelector('.posts-section');
-    if (!postsSection) return;
-    
-    // Remove existing pagination
-    const existingPagination = document.getElementById('profilePagination');
-    if (existingPagination) {
-        existingPagination.remove();
-    }
-    
-    if (totalPages <= 1) {
-        return; // No pagination needed
-    }
-    
-    const paginationDiv = document.createElement('div');
-    paginationDiv.id = 'profilePagination';
-    paginationDiv.style.cssText = 'margin-top: 2rem; padding: 1.5rem; text-align: center; border-top: 1px solid #eee;';
-    
-    let paginationHTML = '<div style="display: flex; justify-content: center; align-items: center; gap: 0.5rem; flex-wrap: wrap;">';
-    
-    // Previous button
-    if (currentPageProfile > 1) {
-        paginationHTML += `<button onclick="window.goToPageProfile(${currentPageProfile - 1})" class="btn-secondary" style="min-width: 100px; cursor: pointer;">← Previous</button>`;
-    } else {
-        paginationHTML += `<button disabled class="btn-secondary" style="min-width: 100px; opacity: 0.5; cursor: not-allowed;">← Previous</button>`;
-    }
-    
-    // Page info
-    paginationHTML += `<span style="padding: 0 1rem; color: #666; font-weight: 500;">Page ${currentPageProfile} of ${totalPages}</span>`;
-    
-    // Next button
-    if (currentPageProfile < totalPages) {
-        paginationHTML += `<button onclick="window.goToPageProfile(${currentPageProfile + 1})" class="btn-secondary" style="min-width: 100px; cursor: pointer;">Next →</button>`;
-    } else {
-        paginationHTML += `<button disabled class="btn-secondary" style="min-width: 100px; opacity: 0.5; cursor: not-allowed;">Next →</button>`;
-    }
-    
-    paginationHTML += '</div>';
-    paginationHTML += `<div style="margin-top: 0.5rem; color: #999; font-size: 0.85rem;">Showing ${((currentPageProfile - 1) * MEMOS_PER_PAGE_PROFILE) + 1}-${Math.min(currentPageProfile * MEMOS_PER_PAGE_PROFILE, totalMemosProfile)} of ${totalMemosProfile} memos</div>`;
-    
-    paginationDiv.innerHTML = paginationHTML;
-    postsSection.appendChild(paginationDiv);
 }
 
 // Show message

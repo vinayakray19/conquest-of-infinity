@@ -13,6 +13,7 @@
     <script src="js/utils.js"></script>
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/nav.js"></script>
     <script src="js/profile.js"></script>
 </head>
 <body>
@@ -42,66 +43,58 @@
                 </ul>
             </div>
 
-            <div>
-                    <!-- Personal Info Section -->
-                    <div id="personal-info" class="content-section active">
-                        <div class="add-post-section">
-                            <h2>Info</h2>
-                            
-                            <div class="form-group">
-                                <label>Username</label>
-                                <input type="text" id="usernameDisplay" readonly style="background: #f5f5f5;">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Email (optional)</label>
-                                <input type="email" id="email" placeholder="your.email@example.com">
-                            </div>
-                            
-                            <div class="form-group">
-                                <label>Bio (optional)</label>
-                                <textarea id="bio" rows="4" placeholder="Tell us about yourself..."></textarea>
-                            </div>
-                            
-                            <button class="btn-primary" id="savePersonalInfo">Save Changes</button>
-                            
-                            <div id="personalInfoMessage" style="margin-top: 1rem;"></div>
-                        </div>
-                    </div>
-
-                    <!-- Post Management Section -->
-                    <div id="post-management" class="content-section">
-                        <div class="add-post-section">
-                            <h2>Add New Memo</h2>
-                
-                <div id="messageContainer"></div>
-                
-                <form id="addPostForm">
+            <!-- Personal Info Section -->
+            <div id="personal-info" class="content-section active">
+                <div class="add-post-section">
+                    <h2>Info</h2>
+                    
                     <div class="form-group">
-                        <label for="title">Title *</label>
-                        <input type="text" id="title" name="title" required>
+                        <label>Username</label>
+                        <input type="text" id="usernameDisplay" readonly style="background: #f5f5f5;">
                     </div>
                     
                     <div class="form-group">
-                        <label for="date">Date *</label>
-                        <input type="date" id="date" name="date" required>
+                        <label>Email (optional)</label>
+                        <input type="email" id="email" placeholder="your.email@example.com">
                     </div>
                     
                     <div class="form-group">
-                        <label for="content">Content *</label>
-                        <textarea id="content" name="content" required placeholder="Write your memo content here..."></textarea>
+                        <label>Bio (optional)</label>
+                        <textarea id="bio" rows="4" placeholder="Tell us about yourself..."></textarea>
                     </div>
                     
-                    <button type="submit" class="btn-primary" id="submitBtn">Create Memo</button>
-                </form>
+                    <button class="btn-primary" id="savePersonalInfo">Save Changes</button>
+                    
+                    <div id="personalInfoMessage" style="margin-top: 1rem;"></div>
+                </div>
             </div>
 
-            <div class="posts-section">
-                <h2>Existing Posts</h2>
-                <div id="postsLoading" style="text-align: center; padding: 2rem; color: #666;">
-                    Loading memos...
+            <!-- Post Management Section -->
+            <div id="post-management" class="content-section">
+                <div class="add-post-section">
+                    <h2>Add New Memo</h2>
+                    
+                    <div id="messageContainer"></div>
+                    
+                    <form id="addPostForm">
+                        <div class="form-group">
+                            <label for="title">Title *</label>
+                            <input type="text" id="title" name="title" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="date">Date *</label>
+                            <input type="date" id="date" name="date" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="content">Content *</label>
+                            <textarea id="content" name="content" required placeholder="Write your memo content here..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary" id="submitBtn">Create Memo</button>
+                    </form>
                 </div>
-                <ul id="postsList" class="posts-list" style="display: none;"></ul>
             </div>
         </div>
     </main>
