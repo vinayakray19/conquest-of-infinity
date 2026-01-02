@@ -3,7 +3,8 @@ services:
     name: digital-diary-api
     env: python
     plan: free
-    buildCommand: pip install -r backend/requirements.txt
+    runtime: python-3.12.8
+    buildCommand: pip install --upgrade pip && pip install -r backend/requirements.txt
     startCommand: gunicorn backend.main:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT
     envVars:
       - key: PORT
