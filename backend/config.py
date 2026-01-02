@@ -15,8 +15,12 @@ DATABASE_URL_ENV = os.getenv('DATABASE_URL', '')
 if DATABASE_URL_ENV:
     # Use provided DATABASE_URL (PostgreSQL on Render, or custom)
     # Render provides postgres:// but SQLAlchemy needs postgresql://
+    # Use psycopg (v3) dialect for Python 3.13+ compatibility
     if DATABASE_URL_ENV.startswith('postgres://'):
-        DATABASE_URL = DATABASE_URL_ENV.replace('postgres://', 'postgresql://', 1)
+        DATABASE_URL = DATABASE_URL_ENV.replace('postgres://', 'postgresql+psycopg://', 1)
+    elif DATABASE_URL_ENV.startswith('postgresql://') and not DATABASE_URL_ENV.startswith('postgresql+'):
+        # Convert postgresql:// to postgresql+psycopg:// to use psycopg3
+        DATABASE_URL = DATABASE_URL_ENV.replace('postgresql://', 'postgresql+psycopg://', 1)
     else:
         DATABASE_URL = DATABASE_URL_ENV
 elif os.getenv('RENDER'):
