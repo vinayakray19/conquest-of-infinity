@@ -74,11 +74,17 @@ Render provides PostgreSQL databases. The app will automatically use the DATABAS
 
 ### Using SQLite (Development Only)
 
-⚠️ **Not recommended for production** - SQLite files on Render are ephemeral and will be lost on redeploy.
+⚠️ **NOT RECOMMENDED FOR PRODUCTION** - SQLite files on Render are ephemeral and will be lost on redeploy.
 
-If you must use SQLite for testing:
-- The app will use `/tmp/memos.db` automatically
+**Important:** The `render.yaml` is configured to use PostgreSQL. If you see database errors, ensure:
+1. The PostgreSQL database is created in Render
+2. The `DATABASE_URL` environment variable is set correctly
+3. The database connection string uses the **Internal Database URL** (not Public URL)
+
+If you must use SQLite for testing (not recommended):
+- The app will try to use `/tmp/memos.db` automatically
 - Data will be lost on each deployment
+- You may encounter permission errors
 
 ## Environment Variables
 

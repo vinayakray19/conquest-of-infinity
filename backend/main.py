@@ -53,7 +53,14 @@ async def health():
 @app.on_event("startup")
 async def startup_event():
     """Initialize database on startup."""
-    init_db()
+    try:
+        init_db()
+    except Exception as e:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error(f"Failed to initialize database: {e}")
+        # Don't fail startup if database init fails (might be first run)
+        # The database will be created on first use
 
 if __name__ == "__main__":
     import uvicorn

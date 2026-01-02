@@ -17,6 +17,8 @@ services:
         fromDatabase:
           name: digital-diary-db
           property: connectionString
+      - key: RENDER
+        value: true
     healthCheckPath: /health
 
 databases:
