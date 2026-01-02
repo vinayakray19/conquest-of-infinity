@@ -45,8 +45,9 @@ echo ""
 echo "🔄 Starting migration..."
 echo ""
 
-# Run migration
-python3 scripts/migrate_to_postgresql.py
+# Run migration (from project root)
+cd "$(dirname "$0")/../.."
+python3 scripts/migrations/migrate_to_postgresql.py
 
 echo ""
 echo "✅ Migration script completed!"

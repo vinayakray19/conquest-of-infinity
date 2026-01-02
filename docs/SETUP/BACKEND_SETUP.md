@@ -76,12 +76,12 @@ python3 scripts/add_memo_api.py
 
 ### Frontend
 
-The frontend is located in the `frontend/` directory:
-- `frontend/index.html` - Home page
-- `frontend/diary.html` - Diary listing page (loads memos from API)
-- `frontend/memo.html` - Memo detail page (loads from API)
+The frontend is located in the `root ` directory:
+- `root index.html` - Home page
+- `root diary.html` - Diary listing page (loads memos from API)
+- `root memo.html` - Memo detail page (loads from API)
 
-Open `frontend/diary.html` in your browser (or serve via a web server) and it will automatically load memos from the API.
+Open `root diary.html` in your browser (or serve via a web server) and it will automatically load memos from the API.
 
 **Important:** Make sure the API server is running when viewing the frontend pages.
 
@@ -108,7 +108,7 @@ Edit `backend/config.py` or set environment variables:
 
 ### Frontend Configuration
 
-The frontend automatically detects the API URL. Edit `frontend/js/config.js` if you need to customize:
+The frontend automatically detects the API URL. Edit `js/config.js` if you need to customize:
 - Automatically uses `http://localhost:8001` on localhost
 - Uses relative URLs in production (if API and frontend on same domain)
 
@@ -137,7 +137,7 @@ The database is automatically created when the backend starts if it doesn't exis
 │   ├── main.py                # Application entry point
 │   └── requirements.txt       # Backend dependencies
 │
-├── frontend/                   # Frontend code
+├── root                    # Frontend code
 │   ├── css/
 │   │   └── styles.css         # Styles
 │   ├── js/                    # JavaScript modules
@@ -185,7 +185,7 @@ The database is automatically created when the backend starts if it doesn't exis
 - Make sure the API server is running: `python3 backend/main.py`
 - Check browser console for errors (F12)
 - Verify API is accessible: `curl http://localhost:8001/api/memos`
-- Check `frontend/js/config.js` for API URL configuration
+- Check `js/config.js` for API URL configuration
 
 **Issue: Migration fails**
 - Make sure script dependencies are installed: `pip install -r scripts/requirements.txt`

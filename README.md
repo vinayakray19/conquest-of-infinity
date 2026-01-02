@@ -55,7 +55,7 @@ pip install -r requirements.txt
 
 The database will be automatically created when you start the backend. If you have existing HTML memo files to migrate, use:
 ```bash
-python3 scripts/migrate_memos.py
+python3 scripts/migrations/migrate_memos.py
 ```
 
 ### 3. Start the Backend Server

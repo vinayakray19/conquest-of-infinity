@@ -1,174 +1,180 @@
 # Project Structure
 
-This project has been organized into a modular structure separating frontend and backend code for easier maintenance and upgrades.
+This project follows a clean, modular architecture separating frontend and backend for easy maintenance and upgrades.
 
 ## Directory Structure
 
 ```
 conquest-of-infinity/
-├── backend/                    # Backend API code
-│   ├── api/                    # API package
-│   │   ├── __init__.py
+├── backend/                    # Backend API (FastAPI)
+│   ├── api/
 │   │   ├── models.py          # Database models
 │   │   ├── database.py        # Database configuration
-│   │   └── routes/            # API routes
-│   │       ├── __init__.py
-│   │       └── memos.py       # Memo-related endpoints
+│   │   ├── auth.py            # Authentication utilities
+│   │   └── routes/            # API endpoints
+│   │       ├── memos.py       # Memo endpoints
+│   │       ├── auth.py        # Authentication endpoints
+│   │       └── stats.py       # Statistics endpoints
 │   ├── config.py              # Backend configuration
 │   ├── main.py                # FastAPI application entry point
 │   └── requirements.txt       # Backend dependencies
 │
-├── css/                       # Frontend styles (GitHub Pages ready)
-│   └── styles.css             # All styling
-├── js/                        # JavaScript modules (GitHub Pages ready)
+├── css/                       # Frontend styles
+│   └── styles.css             # All styling (global)
+│
+├── js/                        # JavaScript modules
 │   ├── config.js              # Frontend configuration
 │   ├── api.js                 # API client
+│   ├── auth.js                # Authentication handling
+│   ├── nav.js                 # Navigation logic
 │   ├── utils.js               # Utility functions
-│   ├── diary.js               # Diary listing page logic
-│   └── memo.js                # Memo detail page logic
-├── index.html                 # Home page (GitHub Pages entry point)
-├── diary.html                 # Diary listing page
-└── memo.html                  # Memo detail page
+│   ├── diary.js               # Diary listing page
+│   ├── memo.js                # Memo detail page
+│   └── profile.js             # Profile page
 │
-├── scripts/                    # Utility scripts
-│   ├── migrate_memos.py       # Migrate HTML memos to database (if needed)
-│   ├── add_memo_api.py        # Add new memo via API
-│   ├── test_api.py            # Test API connectivity
+├── docs/                      # Documentation
+│   ├── SETUP/                 # Setup guides
+│   │   ├── BACKEND_SETUP.md
+│   │   ├── LOCAL_TESTING.md
+│   │   ├── GITHUB_PAGES_SETUP.md
+│   │   ├── RENDER_DEPLOYMENT.md
+│   │   ├── RENDER_FIXES.md
+│   │   └── RENDER_PYTHON_FIX.md
+│   ├── DATABASE/              # Database guides
+│   │   ├── POSTGRESQL_SETUP.md
+│   │   ├── SETUP_POSTGRESQL_RENDER.md
+│   │   ├── MIGRATE_TO_POSTGRES.md
+│   │   ├── MIGRATE_TO_RENDER.md
+│   │   └── MIGRATION_GUIDE.md
+│   ├── AUTH/                  # Authentication guides
+│   │   ├── AUTHENTICATION_SETUP.md
+│   │   ├── CHANGE_CREDENTIALS.md
+│   │   └── DEBUG_LOGIN.md
+│   ├── TROUBLESHOOTING.md
+│   └── README.md
+│
+├── scripts/                   # Utility scripts
+│   ├── setup/                 # Setup scripts
+│   │   ├── start_backend.sh
+│   │   ├── test_local.sh
+│   │   ├── test_login.sh
+│   │   └── migrate_now.sh
+│   ├── migrations/            # Migration scripts
+│   │   ├── migrate_memos.py
+│   │   ├── migrate_to_postgresql.py
+│   │   └── migrate_to_render.py
+│   ├── utils/                 # Utility scripts
+│   │   ├── test_api.py
+│   │   └── check_render_status.py
+│   ├── add_memo_api.py        # Add memo via API
 │   └── requirements.txt       # Script dependencies
 │
-└── memos.db                    # SQLite database (all memos stored here)
+├── index.html                 # Home page
+├── diary.html                 # Diary listing page
+├── memo.html                  # Memo detail page
+├── login.html                 # Login page
+├── profile.html               # Profile/Admin page
 │
-└── Documentation files:
-    ├── README.md               # Main documentation
-    ├── BACKEND_SETUP.md        # Backend setup guide
-    ├── TROUBLESHOOTING.md      # Troubleshooting guide
-    └── PROJECT_STRUCTURE.md    # This file
+├── render.yaml                # Render deployment config
+├── runtime.txt                # Python version
+├── README.md                  # Main documentation
+├── QUICK_START.md             # Quick start guide
+├── PROJECT_STRUCTURE.md       # This file
+└── ADD_MEMO_EXAMPLE.md        # Example usage
 ```
 
-## Key Design Decisions
+## Key Design Principles
 
-### Backend Modularity
+### 1. Separation of Concerns
+- **Backend**: FastAPI application with modular routes
+- **Frontend**: Static HTML + JavaScript modules
+- **Documentation**: Organized by topic in `docs/`
+- **Scripts**: Organized by purpose
 
-1. **Separated Models and Database**: 
-   - `models.py` contains only data models
-   - `database.py` handles database connection and sessions
-   
-2. **Route-based Organization**:
-   - Each resource (memos) has its own route file
-   - Easy to add new resources without cluttering
+### 2. Modular Architecture
 
-3. **Configuration Management**:
-   - All configuration in `config.py`
-   - Environment variable support for deployment
+#### Backend
+- `config.py` - Centralized configuration
+- `api/models.py` - Database models
+- `api/database.py` - Database connection
+- `api/routes/` - API endpoints (one file per resource)
+- `main.py` - Application entry point
 
-4. **Clear Entry Point**:
-   - `main.py` is the single entry point
-   - All routes registered here
+#### Frontend
+- `js/config.js` - Configuration
+- `js/api.js` - API client (reusable)
+- `js/auth.js` - Authentication (reusable)
+- `js/utils.js` - Utilities (reusable)
+- Page-specific modules: `diary.js`, `memo.js`, `profile.js`
 
-### Frontend Modularity
+### 3. File Organization
 
-1. **Separated JavaScript**:
-   - Configuration, API client, and utilities in separate files
-   - Page-specific logic in dedicated files
-   - Easy to test and maintain
-
-2. **Reusable Components**:
-   - `api.js` can be used by any page
-   - `utils.js` provides common functions
-   - `config.js` centralizes configuration
-
-3. **Clean HTML**:
-   - HTML files only contain structure
-   - All logic in JavaScript modules
-
-4. **GitHub Pages Ready**:
-   - Files in root directory for easy GitHub Pages hosting
-   - No build step required
-   - Static hosting compatible
-
-### Benefits of This Structure
-
-1. **Easy Upgrades**:
-   - Backend and frontend can be upgraded independently
-   - Clear separation of concerns
-
-2. **Better Testing**:
-   - Each module can be tested in isolation
-   - Mock dependencies easily
-
-3. **Scalability**:
-   - Easy to add new features
-   - New routes don't affect existing code
-   - New pages can reuse existing modules
-
-4. **Maintainability**:
-   - Clear organization makes finding code easier
-   - Reduced code duplication
-   - Easier onboarding for new developers
-
-## Migration from Old Structure
-
-The old structure had everything in the root directory. The new structure:
-- Preserves all existing functionality
-- Maintains backward compatibility where possible
-- Allows gradual migration
-
-### Old Files (Deprecated but Preserved)
-
-- `api.py` → Now `backend/main.py` + `backend/api/routes/memos.py`
-- `models.py` → Now `backend/api/models.py`
-- `diary.html` → Now `frontend/diary.html` (updated to use modules)
-- `memo.html` → Now `frontend/memo.html` (updated to use modules)
-- `add_memo.py` → Still exists for static HTML generation (if needed)
-- `add_memo_api.py` → Moved to `scripts/add_memo_api.py`
-
-## Upgrading the System
-
-### Backend Upgrades
-
-1. **Update Dependencies**:
-   ```bash
-   cd backend
-   pip install -r requirements.txt --upgrade
-   ```
-
-2. **Add New Routes**:
-   - Create new file in `backend/api/routes/`
-   - Import and register in `backend/main.py`
-
-3. **Update Models**:
-   - Edit `backend/api/models.py`
-   - Run migrations if needed
-
-### Frontend Upgrades
-
-1. **Update JavaScript Modules**:
-   - Edit files in `frontend/js/`
-   - Changes automatically reflect in all pages using them
-
-2. **Add New Pages**:
-   - Create HTML file in `frontend/`
-   - Include necessary JS modules
-
-3. **Update Styles**:
-   - Edit `frontend/css/styles.css`
-   - Changes apply globally
+- **Root level**: Only essential files (HTML, config, main docs)
+- **Documentation**: Organized in `docs/` by category
+- **Scripts**: Organized by purpose (`setup/`, `migrations/`, `utils/`)
+- **No redundancy**: Single source of truth for each file
 
 ## Development Workflow
 
-1. **Backend Development**:
-   ```bash
-   cd backend
-   python main.py  # or: uvicorn backend.main:app --reload
-   ```
+### Backend Development
+```bash
+# Start backend server
+cd scripts/setup
+./start_backend.sh
 
-2. **Frontend Development**:
-   - Edit files in `frontend/`
-   - Use browser dev tools for debugging
-   - API calls go to backend on port 8001
+# Or manually
+python3 -m uvicorn backend.main:app --reload --port 8001
+```
 
-3. **Adding Features**:
-   - Backend: Add routes in `backend/api/routes/`
-   - Frontend: Update or create JS modules in `frontend/js/`
-   - Update HTML files to use new functionality
+### Frontend Development
+- Edit HTML files in root
+- Edit JavaScript in `js/`
+- Edit CSS in `css/styles.css`
+- No build step required
 
+### Adding Features
+
+**Backend:**
+1. Add routes in `backend/api/routes/`
+2. Update models in `backend/api/models.py` if needed
+3. Register routes in `backend/main.py`
+
+**Frontend:**
+1. Add JavaScript module in `js/` if reusable
+2. Update page-specific JS if needed
+3. Update HTML to use new functionality
+
+### Running Scripts
+
+```bash
+# Migration scripts
+python3 scripts/migrations/migrate_to_postgresql.py
+
+# Utility scripts
+python3 scripts/utils/test_api.py
+
+# Add memo
+python3 scripts/add_memo_api.py
+```
+
+## File Naming Conventions
+
+- **HTML**: lowercase with hyphens (`diary.html`, `login.html`)
+- **JavaScript**: camelCase (`diary.js`, `profile.js`)
+- **Python**: snake_case (`migrate_memos.py`, `add_memo_api.py`)
+- **Documentation**: UPPERCASE with underscores (`BACKEND_SETUP.md`)
+
+## Deployment Structure
+
+- **Frontend**: Files in root directory (GitHub Pages compatible)
+- **Backend**: `backend/` directory (deployed to Render)
+- **Config**: `render.yaml` for Render deployment
+
+## Benefits of This Structure
+
+✅ **Clear Organization** - Easy to find files  
+✅ **No Redundancy** - Single source of truth  
+✅ **Modular** - Easy to upgrade components  
+✅ **Scalable** - Easy to add new features  
+✅ **Maintainable** - Clear separation of concerns  
+✅ **Documented** - Organized documentation  

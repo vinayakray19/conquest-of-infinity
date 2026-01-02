@@ -138,7 +138,7 @@ The service provides a health check endpoint:
 
 After deploying the backend, update your frontend:
 
-1. **Update API URL in `frontend/js/config.js`:**
+1. **Update API URL in `js/config.js`:**
    ```javascript
    const API_BASE_URL = 'https://your-api.onrender.com';
    ```

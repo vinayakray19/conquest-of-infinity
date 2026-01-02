@@ -33,7 +33,7 @@ uvicorn backend.main:app --reload --port 8001
 
 ### 4. Use the Frontend
 
-Open `frontend/diary.html` in your browser (or serve via a web server).
+Open `root diary.html` in your browser (or serve via a web server).
 
 ## File Mapping
 
@@ -50,11 +50,11 @@ Open `frontend/diary.html` in your browser (or serve via a web server).
 
 | Old Location | New Location | Notes |
 |--------------|--------------|-------|
-| `diary.html` | `frontend/diary.html` | Updated to use JS modules |
-| `memo.html` | `frontend/memo.html` | Updated to use JS modules |
-| `index.html` | `frontend/index.html` | Unchanged |
-| `css/styles.css` | `frontend/css/styles.css` | Same location |
-| N/A | `frontend/js/*.js` | New: Extracted JavaScript modules |
+| `diary.html` | `root diary.html` | Updated to use JS modules |
+| `memo.html` | `root memo.html` | Updated to use JS modules |
+| `index.html` | `root index.html` | Unchanged |
+| `css/styles.css` | `css/styles.css` | Same location |
+| N/A | `js/*.js` | New: Extracted JavaScript modules |
 
 ### Scripts
 
@@ -68,7 +68,7 @@ Open `frontend/diary.html` in your browser (or serve via a web server).
 
 1. **Import Paths**: Scripts now import from `backend.api.*` instead of root-level modules
 2. **Running Backend**: Use `python backend/main.py` instead of `python api.py`
-3. **Frontend Paths**: Use `frontend/diary.html` instead of `diary.html`
+3. **Frontend Paths**: Use `root diary.html` instead of `diary.html`
 
 ## Backward Compatibility
 
@@ -80,6 +80,6 @@ The old files are still in the root directory but are **deprecated**. They still
 ## Next Steps
 
 1. Update any scripts or documentation that reference old file paths
-2. Gradually migrate to using `frontend/` directory
+2. Gradually migrate to using `root ` directory
 3. Remove old files once fully migrated (optional)
 

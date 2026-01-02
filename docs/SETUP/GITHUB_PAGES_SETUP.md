@@ -104,7 +104,7 @@ If you see CORS errors in the browser console:
 ### Pages Not Loading
 
 - Check that GitHub Pages is enabled and building
-- Verify file paths are correct (relative paths, no `/frontend/` prefix)
+- Verify file paths are correct (relative paths, no `/root ` prefix)
 - Check browser console for JavaScript errors
 
 ### API Not Connecting

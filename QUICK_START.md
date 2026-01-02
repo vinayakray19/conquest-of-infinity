@@ -18,12 +18,12 @@ kill $(lsof -ti:8000) 2>/dev/null
 **Option A: Use the startup script (Recommended)**
 ```bash
 # With default credentials (admin/admin)
-./start_backend.sh
+./scripts/setup/start_backend.sh
 
 # Or with custom credentials
 export ADMIN_USERNAME=your_username
 export ADMIN_PASSWORD=your_password
-./start_backend.sh
+./scripts/setup/start_backend.sh
 ```
 
 **Option B: Manual start**
@@ -67,7 +67,7 @@ curl -X POST http://127.0.0.1:8000/api/login \
 
 ### Issue: "Connection refused"
 **Cause:** FastAPI server not running  
-**Fix:** Start the server with `./start_backend.sh` or uvicorn command
+**Fix:** Start the server with `./scripts/setup/start_backend.sh` or uvicorn command
 
 ### Issue: "Incorrect username or password"
 **Cause:** Credentials don't match what server expects  
