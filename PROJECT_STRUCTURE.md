@@ -18,18 +18,17 @@ conquest-of-infinity/
 │   ├── main.py                # FastAPI application entry point
 │   └── requirements.txt       # Backend dependencies
 │
-├── frontend/                   # Frontend code
-│   ├── css/
-│   │   └── styles.css         # All styling
-│   ├── js/                    # JavaScript modules
-│   │   ├── config.js          # Frontend configuration
-│   │   ├── api.js             # API client
-│   │   ├── utils.js           # Utility functions
-│   │   ├── diary.js           # Diary listing page logic
-│   │   └── memo.js            # Memo detail page logic
-│   ├── index.html             # Home page
-│   ├── diary.html             # Diary listing page
-│   └── memo.html              # Memo detail page
+├── css/                       # Frontend styles (GitHub Pages ready)
+│   └── styles.css             # All styling
+├── js/                        # JavaScript modules (GitHub Pages ready)
+│   ├── config.js              # Frontend configuration
+│   ├── api.js                 # API client
+│   ├── utils.js               # Utility functions
+│   ├── diary.js               # Diary listing page logic
+│   └── memo.js                # Memo detail page logic
+├── index.html                 # Home page (GitHub Pages entry point)
+├── diary.html                 # Diary listing page
+└── memo.html                  # Memo detail page
 │
 ├── scripts/                    # Utility scripts
 │   ├── migrate_memos.py       # Migrate HTML memos to database (if needed)
@@ -81,6 +80,11 @@ conquest-of-infinity/
 3. **Clean HTML**:
    - HTML files only contain structure
    - All logic in JavaScript modules
+
+4. **GitHub Pages Ready**:
+   - Files in root directory for easy GitHub Pages hosting
+   - No build step required
+   - Static hosting compatible
 
 ### Benefits of This Structure
 

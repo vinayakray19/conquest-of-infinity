@@ -15,18 +15,17 @@ conquest-of-infinity/
 │   ├── main.py                # Application entry point
 │   └── requirements.txt       # Backend dependencies
 │
-├── frontend/                   # Frontend (HTML/CSS/JS)
-│   ├── css/
-│   │   └── styles.css         # All styling
-│   ├── js/                    # JavaScript modules
-│   │   ├── config.js          # Configuration
-│   │   ├── api.js             # API client
-│   │   ├── utils.js           # Utilities
-│   │   ├── diary.js           # Diary page logic
-│   │   └── memo.js            # Memo page logic
-│   ├── index.html             # Home page
-│   ├── diary.html             # Diary listing
-│   └── memo.html              # Memo detail page
+├── css/                       # Frontend styles
+│   └── styles.css             # All styling
+├── js/                        # JavaScript modules
+│   ├── config.js              # Configuration
+│   ├── api.js                 # API client
+│   ├── utils.js               # Utilities
+│   ├── diary.js               # Diary page logic
+│   └── memo.js                # Memo page logic
+├── index.html                 # Home page (GitHub Pages entry)
+├── diary.html                 # Diary listing
+└── memo.html                  # Memo detail page
 │
 ├── scripts/                    # Utility scripts
 │   ├── migrate_memos.py       # Migrate HTML to database
@@ -75,7 +74,12 @@ The API will be available at `http://localhost:8001`
 
 ### 4. View the Frontend
 
-Open `frontend/diary.html` in your browser (or serve via a web server).
+Open `diary.html` in your browser (or serve via a web server).
+
+**For GitHub Pages:**
+- Push your code to GitHub
+- Enable GitHub Pages in repository settings
+- The frontend files are in the root directory for easy GitHub Pages hosting
 
 ## Features
 
