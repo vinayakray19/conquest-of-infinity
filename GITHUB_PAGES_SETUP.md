@@ -33,19 +33,15 @@ git push origin main
 
 ### 3. Configure API URL
 
-Update the API URL in `js/config.js` for production:
-
-```javascript
-// In js/config.js, update this line:
-API_BASE_URL = window.API_BASE_URL || 'https://your-api.onrender.com';
+The API URL is already configured in `js/config.js` to use:
+```
+https://conquest-of-infinity.onrender.com
 ```
 
-Replace `https://your-api.onrender.com` with your actual Render API URL.
-
-**Alternative:** You can override the API URL using HTML meta tag or by setting it before the script loads:
+**To override:** You can set a custom API URL before the script loads:
 ```html
 <script>
-  window.API_BASE_URL = 'https://your-api.onrender.com';
+  window.API_BASE_URL = 'https://your-custom-api-url.com';
 </script>
 <script src="js/config.js"></script>
 ```

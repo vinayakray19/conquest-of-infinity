@@ -20,14 +20,13 @@ const FrontendConfig = {
         }
         
         // GitHub Pages or other production hosting
-        // Update this URL to match your Render API URL
+        // Using Render API URL
         if (window.location.hostname.includes('github.io')) {
-            return 'https://your-api.onrender.com';
+            return 'https://conquest-of-infinity.onrender.com';
         }
         
         // Default production API URL
-        // Update this to match your actual API URL
-        return 'https://your-api.onrender.com';
+        return 'https://conquest-of-infinity.onrender.com';
     }
 };
 
