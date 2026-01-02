@@ -1,0 +1,68 @@
+"""
+Main FastAPI application entry point.
+"""
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from backend.config import (
+    API_VERSION,
+    CORS_ORIGINS,
+    CORS_ALLOW_CREDENTIALS,
+    ENVIRONMENT
+)
+from backend.api.database import init_db
+from backend.api.routes import memos, stats
+
+# Create FastAPI app
+app = FastAPI(
+    title="Digital Diary API",
+    description="Backend API for managing diary memos",
+    version=API_VERSION
+)
+
+# CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=CORS_ORIGINS,
+    allow_credentials=CORS_ALLOW_CREDENTIALS,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Include routers
+app.include_router(memos.router)
+app.include_router(stats.router)
+
+# Root endpoint
+@app.get("/")
+async def root():
+    """Root endpoint."""
+    return {
+        "message": "Digital Diary API",
+        "version": API_VERSION,
+        "environment": ENVIRONMENT
+    }
+
+# Health check endpoint
+@app.get("/health")
+async def health():
+    """Health check endpoint."""
+    return {"status": "healthy"}
+
+# Initialize database on startup
+@app.on_event("startup")
+async def startup_event():
+    """Initialize database on startup."""
+    init_db()
+
+if __name__ == "__main__":
+    import uvicorn
+    from backend.config import API_HOST, API_PORT, API_RELOAD
+    
+    uvicorn.run(
+        "backend.main:app",
+        host=API_HOST,
+        port=API_PORT,
+        reload=API_RELOAD
+    )
+
