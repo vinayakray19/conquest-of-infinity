@@ -28,11 +28,20 @@ def migrate_to_postgresql():
         print("❌ DATABASE_URL environment variable not set!")
         print("   Set it to your Render PostgreSQL connection string:")
         print("   export DATABASE_URL='postgres://user:pass@host:port/dbname'")
+        print()
+        print("   To get your DATABASE_URL from Render:")
+        print("   1. Go to Render Dashboard → Your Database")
+        print("   2. Click 'Connect' tab")
+        print("   3. Copy 'Internal Database URL' (for same region)")
+        print("   4. Or copy 'External Connection String' (if running locally)")
         return
     
-    # Convert postgres:// to postgresql:// if needed
+    # Convert postgres:// to postgresql+psycopg:// for psycopg3 compatibility
     if pg_url.startswith('postgres://'):
-        pg_url = pg_url.replace('postgres://', 'postgresql://', 1)
+        pg_url = pg_url.replace('postgres://', 'postgresql+psycopg://', 1)
+    elif pg_url.startswith('postgresql://') and not pg_url.startswith('postgresql+'):
+        # Convert postgresql:// to postgresql+psycopg://
+        pg_url = pg_url.replace('postgresql://', 'postgresql+psycopg://', 1)
     
     # Connect to local SQLite
     local_db_path = Path(__file__).resolve().parent.parent / 'memos.db'

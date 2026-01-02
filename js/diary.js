@@ -15,7 +15,32 @@ document.addEventListener('DOMContentLoaded', async function() {
         currentPage = parseInt(pageParam) || 1;
     }
     await loadMemos();
+    await loadSuggestedRead();
 });
+
+// Load suggested read (memo #13: "Failure, Fear and Counter")
+async function loadSuggestedRead() {
+    const suggestedRead = document.querySelector('.suggested-read');
+    if (!suggestedRead) return;
+    
+    try {
+        // Try to fetch memo #13
+        const memo = await API.getMemo(13);
+        if (memo && memo.memo_number === 13) {
+            suggestedRead.href = `memo.html?number=13`;
+            suggestedRead.textContent = memo.title || 'Failure, Fear and Counter';
+        } else {
+            // Fallback if memo #13 not found
+            suggestedRead.href = '#';
+            suggestedRead.textContent = 'Failure, Fear and Counter';
+        }
+    } catch (error) {
+        console.warn('Could not load suggested read (memo #13):', error);
+        // Set fallback text even if API fails
+        suggestedRead.href = 'memo.html?number=13';
+        suggestedRead.textContent = 'Failure, Fear and Counter';
+    }
+}
 
 async function loadMemos() {
     try {
@@ -76,14 +101,6 @@ async function loadMemos() {
                 console.error(`Error processing memo ${index}:`, err, memo);
             }
         });
-        
-        // Update suggested read link (use first memo of current page)
-        const suggestedRead = document.querySelector('.suggested-read');
-        if (suggestedRead && memos.length > 0) {
-            const firstMemo = memos[0];
-            suggestedRead.href = `memo.html?number=${firstMemo.memo_number}`;
-            suggestedRead.textContent = firstMemo.title;
-        }
         
         // Render pagination
         renderPagination();
